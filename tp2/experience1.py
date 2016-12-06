@@ -25,15 +25,20 @@ def simulation(C,X,lesReactions,h) :
     lesReactions une liste de String expliquant la reaction
     h nombre de combinaisons possible des réactifs
     '''
+    cardA = [X[0]]
+    cardB = [X[1]]
+    lesTemps = [0]
     t = 0
     n = 0
     M = len(lesReactions)
-    while(n<1000) :
+    while(True) :
         # box 1
         lesA = []
         for v in range(len(C)) :
-            lesA.append(h[v]*C[v]) # <- h est le nombre de combinaisons
+            lesA.append(h[v].calculH(X)*C[v]) # <- h est le nombre de combinaisons
         a0 = sum(lesA)
+        if a0 == 0 :
+            break
         # box 2
         r1 = r.random()
         r2 = r.random()
@@ -53,7 +58,23 @@ def simulation(C,X,lesReactions,h) :
         t += tau
         n += 1
         reaction(X,lesReactions[mu])
+        lesTemps.append(t)
+        cardA.append(X[0])
+        cardB.append(X[1])
+    plt.plot(lesTemps,cardA)
+    plt.plot(lesTemps,cardB)
 
+
+class H(object):
+    """docstring for H"""
+    def __init__(self):
+        super(H, self).__init__()
         
+    def calculH(self,X) :
+        cardA = X[0]
+        return cardA
     
 
+h = H()
+simulation([10],[1000000,0],[[[(0,1)],[(1,1)]]],[h])
+plt.show()
